@@ -20,7 +20,7 @@ export interface NotificationCenterComponentProps {
   i18n?: INovuProviderProps['i18n'];
   colorScheme?: 'light' | 'dark';
   // TODO: remove this prop
-  asd?: any;
+  initialized?: any;
 }
 
 /*
@@ -38,7 +38,7 @@ export const NOTIFICATION_CENTER_PROPS = [
   'i18n',
   'colorScheme',
   // TODO: remove this prop
-  'asd',
+  'initialized',
 ];
 
 export const NotificationCenterComponent = ({
@@ -47,9 +47,12 @@ export const NotificationCenterComponent = ({
   subscriberId,
   applicationIdentifier,
   colorScheme = 'dark',
-  asd,
+  initialized,
 }: NotificationCenterComponentProps) => {
-  console.log({ backendUrl, socketUrl, subscriberId, applicationIdentifier, asd });
+  if (!initialized) return null;
+
+  console.log('WHAT');
+  console.log({ backendUrl, socketUrl, subscriberId, applicationIdentifier, initialized });
 
   return (
     <NovuProvider
@@ -93,5 +96,3 @@ function PopoverWrapper({ colorScheme }: Pick<NotificationCenterComponentProps, 
 export const NotificationCenterWebComponent = reactToWebComponent(NotificationCenterComponent, React, ReactDOM, {
   props: NOTIFICATION_CENTER_PROPS,
 });
-
-customElements.define('notification-center-component', NotificationCenterWebComponent);

@@ -1,12 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone } from '@angular/core';
-import { ProxyCmp } from './angular-component-lib/utils';
-
-import '@novu/notification-center';
-
-// eslint-disable-next-line
-// export declare interface NotificationCenterComponent extends NotificationCenterComponentProps {}
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+} from '@angular/core';
+import { defineCustomElement, ProxyCmp } from './angular-component-lib/utils';
+import { NotificationCenterWebComponent } from '@novu/notification-center';
 
 @ProxyCmp({
+  defineCustomElementFn: () => {
+    defineCustomElement('notification-center-component', NotificationCenterWebComponent);
+  },
   inputs: [
     'stores',
     'backendUrl',
@@ -22,7 +29,7 @@ import '@novu/notification-center';
 @Component({
   selector: 'notification-center-component',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
+  template: `<ng-content></ng-content> `,
   inputs: [
     'stores',
     'backendUrl',
@@ -35,10 +42,15 @@ import '@novu/notification-center';
     'colorScheme',
   ],
 })
-export class NotificationCenterComponent {
-  protected el: HTMLElement;
+export class NotificationCenterComponent implements AfterContentInit {
+  protected el: any;
   constructor(changeDetector: ChangeDetectorRef, elRef: ElementRef, protected z: NgZone) {
-    changeDetector.detach();
     this.el = elRef.nativeElement;
+  }
+
+  ngAfterContentInit() {
+    this.z.runOutsideAngular(() => {
+      this.el.initialized = true;
+    });
   }
 }

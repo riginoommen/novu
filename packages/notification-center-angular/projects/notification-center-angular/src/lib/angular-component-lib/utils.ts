@@ -5,6 +5,7 @@ import { fromEvent } from 'rxjs';
 export const proxyInputs = (Cmp: any, inputs: string[]) => {
   const Prototype = Cmp.prototype;
   console.log('proxyInputs', { Cmp, inputs, Prototype });
+
   inputs.forEach((item) => {
     Object.defineProperty(Prototype, item, {
       get() {
@@ -55,5 +56,6 @@ export function ProxyCmp(opts: { defineCustomElementFn?: () => void; inputs?: an
     }
     return cls;
   };
+
   return decorator;
 }
